@@ -28,7 +28,6 @@ namespace Catalog.Controllers
         public IEnumerable<ItemDto> GetItems()
         {
             var items = _repository.GetItems().Select(item => item.AsDto());
-
             return items;
         }
 

@@ -20,32 +20,32 @@ namespace Catalog.Repositories
             _itemsCollections = database.GetCollection<Item>(_collectionName);
         }
 
-        public void CreateItem(Item item)
+        public async Task CreateItemAsync(Item item)
         {
-            _itemsCollections.InsertOne(item);
+            await _itemsCollections.InsertOneAsync(item);
         }
 
-        public void DeleteItem(Guid id)
-        {
-            var filter = filterBuilder.Eq(item => item.Id, id);
-            _itemsCollections.DeleteOne(filter);
-        }
-
-        public Item GetItem(Guid id)
+        public async Task DeleteItemAsync(Guid id)
         {
             var filter = filterBuilder.Eq(item => item.Id, id);
-            return _itemsCollections.Find(filter).SingleOrDefault();
+            await _itemsCollections.DeleteOneAsync(filter);
         }
 
-        public IEnumerable<Item> GetItems()
+        public async Task<Item> GetItemAsync(Guid id)
         {
-            return _itemsCollections.Find(_ => true).ToList();
+            var filter = filterBuilder.Eq(item => item.Id, id);
+            return await _itemsCollections.Find(filter).SingleOrDefaultAsync();
         }
 
-        public void UpdateItem(Item item)
+        public async Task<IEnumerable<Item>> GetItemsAsync()
+        {
+            return await _itemsCollections.Find(_ => true).ToListAsync();
+        }
+
+        public async Task UpdateItemAsync(Item item)
         {
             var filter = filterBuilder.Eq(existingItem => existingItem.Id, item.Id);
-            _itemsCollections.ReplaceOne(filter, item);
+            await _itemsCollections.ReplaceOneAsync(filter, item);
         }
     }
 }
